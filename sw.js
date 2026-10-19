@@ -1,6 +1,6 @@
-const CACHE = 'kindikti-cdf7f74ca167';
+const CACHE = 'kindikti-1b2f3f949e99';
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(["./","./assets/index-DHcaytdg.js","./assets/index-wp0DfEdt.css","./assets/inscription-m0-DQtqz.jpg","./assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2","./assets/manrope-greek-wght-normal-DL7QRZyv.woff2","./assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2","./assets/manrope-latin-wght-normal-DHIcAJRg.woff2","./assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2","./assets/rock-hOyebhBD.jpg","./assets/tamga-C_-g8Udm.jpg","./icon-192.png","./icon-512.png","./icon.svg","./index.html","./manifest.webmanifest","./third-party-notices.txt"])));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(["./","./assets/index-B49RGHLN.js","./assets/index-Dq5EdJ9J.css","./assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2","./assets/manrope-greek-wght-normal-DL7QRZyv.woff2","./assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2","./assets/manrope-latin-wght-normal-DHIcAJRg.woff2","./assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2","./assets/photo-01-BtP8RCGx.webp","./assets/photo-02-pydFSVSK.webp","./assets/photo-03-Cg0WatZk.webp","./assets/photo-04-CRKFp9lq.webp","./assets/photo-05-l4g-t15q.webp","./assets/photo-06-Bf0ViVyq.webp","./assets/photo-07-lgvuzASA.webp","./assets/rock-hOyebhBD.jpg","./icon-192.png","./icon-512.png","./icon.svg","./index.html","./manifest.webmanifest","./third-party-notices.txt"])));
   self.skipWaiting();
 });
 self.addEventListener('activate', (event) => {
@@ -8,8 +8,9 @@ self.addEventListener('activate', (event) => {
 });
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
+  if (event.request.headers.has('range') || event.request.destination === 'video' || /\.(?:mp4|mov|webm|m4v)$/i.test(new URL(event.request.url).pathname)) return;
   event.respondWith(fetch(event.request).then(response => {
-    if (response.ok) { const copy = response.clone(); caches.open(CACHE).then(cache => cache.put(event.request, copy)); }
+    if (response.status === 200) { const copy = response.clone(); event.waitUntil(caches.open(CACHE).then(cache => cache.put(event.request, copy)).catch(() => {})); }
     return response;
   }).catch(() => caches.match(event.request).then(cached => cached || (event.request.mode === 'navigate' ? caches.match('./') : Response.error()))));
 });
